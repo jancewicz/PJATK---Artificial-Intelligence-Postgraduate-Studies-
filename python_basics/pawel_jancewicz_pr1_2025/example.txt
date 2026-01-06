@@ -1,0 +1,10 @@
+python
+kot
+programowanie
+lista
+pies
+słownik
+pętla
+dom
+program
+funkcja
