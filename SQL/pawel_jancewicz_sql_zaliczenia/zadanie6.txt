@@ -1,0 +1,91 @@
+ZADANIE 6
+
+A) WITH StudentsAge AS (
+    SELECT StudentId,
+           ProgramId,
+           CAST (STRFTIME('%Y.%m%d', 'now') - STRFTIME('%Y.%m%d', DateOfBirth) AS INT) AS StudentAge
+      FROM Students
+),
+AverageStudentAgeOnCSDepartment AS (
+    SELECT D.DepartmentId,
+           D.DepartmentName,
+           ROUND(AVG(SA.StudentAge), 2) AS AvgStudentAge
+      FROM StudentsAge SA
+           JOIN
+           Programs P ON SA.ProgramId = P.ProgramId
+           JOIN
+           Departments D ON D.DepartmentId = P.DepartmentId
+     GROUP BY D.DepartmentName
+    HAVING D.DepartmentId = 1
+)
+SELECT S.FirstName,
+       S.LastName,
+       S.DateOfBirth
+  FROM Students S
+       JOIN
+       StudentsAge SA ON S.StudentId = SA.StudentId
+ WHERE SA.StudentAge < (
+                           SELECT AvgStudentAge
+                             FROM AverageStudentAgeOnCSDepartment
+                       );
+
+FirstName	LastName	DateOfBirthMichael		Young		2002-02-05Megan		Williams	2001-03-21Gary		Castro		2004-04-27Philip		Williams	2001-12-22Jesse		Schmidt		2005-03-22Nicole		Mckay		2002-05-30Thomas		Ballard		2003-04-20Duane		Gonzalez	2004-05-21Alison		Hughes		2004-04-18Amy		Griffin		2004-11-21Adam		Bray		2003-01-21Kimberly	Blake		2004-03-24John		Farmer		2003-04-21Kyle		Tucker		2005-02-11Wendy		Rios		2001-09-16James		Lowery		2005-02-07Ruth		Garcia		2004-12-24Melissa		Williams	2005-04-25Timothy		Austin		2005-03-29Catherine	Morales		2003-05-23Erin		Orozco		2001-05-10Catherine	Jones		2005-04-12Ronald		Peters		2004-04-16Leslie		Watson		2001-04-26Frank		Hall		2004-10-27Dennis		Cantrell	2003-10-08Nicholas	Gonzalez	2005-01-01Janet		Miranda		2003-09-24Gregg		Harris		2001-02-23Robyn		Bullock		2004-03-24Nicholas	Davis		2004-09-03Alicia		White		2001-11-05Christopher	Jones		2001-10-27Gregory		Allen		2003-04-19Amy		Gardner		2001-09-07Abigail		Romero		2001-02-25Diana		Frazier		2004-11-11John		Smith		2002-04-06Abigail		Howard		2004-09-08Richard		Parsons		2003-06-02William		Castillo	2003-08-09Robert		Davidson	2003-05-21Theresa		Rodgers		2005-02-06Stefanie	Lawson		2001-03-21Jodi		Reynolds	2003-09-07Julia		Gray		2005-05-20Wesley		Romero		2003-03-13Susan		Long		2003-03-29Lauren		Chandler	2002-12-17Jennifer	Huffman		2004-08-29Deborah		Jacobs		2001-05-14Michael		Mccarty		2005-03-28Kaitlyn		Cunningham	2002-03-17David		Sullivan	2002-11-25Felicia		Johnson		2002-06-30Adam		Holloway	2001-12-02Robert		Henry		2001-07-27Jeffrey		Ochoa		2005-01-12Rachel		Anderson	2004-02-28James		Marks		2002-12-01Bryan		Phelps		2005-05-15Erica		Norton		2003-10-23Todd		Lee		2003-02-24Gabrielle	Brennan		2002-07-25Kathleen	Perkins		2001-04-12Kimberly	Rodriguez	2003-07-21Christine	Ayala		2001-12-08Natalie		Gonzalez	2002-07-10Anthony		Larson		2004-07-10John		Moore		2001-12-11Benjamin	Jones		2004-07-14Samuel		Donaldson	2004-04-02Lauren		Cole		2001-07-16Brandi		Leonard		2002-03-13Whitney		Diaz		2001-09-24Edward		Frye		2005-05-19Joseph		Lynn		2003-10-14Gabrielle	Decker		2002-11-08Mary		Rose		2003-10-13Anne		Ruiz		2002-01-24Mary		Parker		2003-01-28Tracy		Johns		2004-02-23Thomas		Blair		2001-12-31Victoria	Rodgers		2001-05-09William		Roberts		2001-03-24Christopher	Valdez		2001-03-11John		Meadows		2004-11-26Jonathan	Hill		2003-09-16Thomas		Meadows		2004-10-27Tara		Rodgers		2005-06-17Tyrone		Ryan		2005-04-23Jennifer	Reynolds	2001-04-09Willie		Duran		2005-04-16Robert		Briggs		2005-06-18Eric		Perez		2002-10-05Allison		Garrison	2003-11-10Darren		Lewis		2002-05-08Kayla		Moody		2004-09-30Corey		Bennett		2001-02-04James		Lozano		2001-07-04Erin		Bowen		2003-09-14Phillip		Anderson	2002-02-14Kenneth		Robinson	2005-03-05Erin		Thomas		2003-09-20Daniel		Mason		2003-08-19Tammy		Morgan		2002-11-28Darren		Wolfe		2002-10-09Karen		Brown		2002-09-01Debra		Wood		2005-05-08Margaret	Simmons		2001-05-22Douglas		Smith		2001-10-31Alexis		Mcdaniel	2003-06-01Kimberly	Marquez		2003-02-13Joshua		Contreras	2004-04-16Deborah		Cain		2003-02-18Charles		Anderson	2004-01-03Kendra		May		2001-09-26Preston		Floyd		2004-08-22Victor		Burton		2001-11-27Stephanie	Walsh		2003-03-20Cameron		Fuller		2001-02-21Susan		Potter		2003-03-11Kimberly	Smith		2003-04-15Katelyn		Woods		2004-08-23Courtney	Robinson	2003-11-10Tracy		Powell		2003-11-29Lance		Morales		2002-01-01Mark		Maldonado	2002-07-14Andrea		Johnson		2002-09-18Jimmy		Smith		2001-03-16Brian		Fields		2005-03-30Robert		Kim		2005-05-25Kimberly	Solomon		2004-08-12Dennis		Gonzales	2003-12-06Elizabeth	Jennings	2004-05-17Andrea		Powers		2003-11-07Kimberly	Hale		2004-02-18Kimberly	Wilson		2004-08-30Jacqueline	Day		2002-01-17Trevor		Watson		2001-12-14Brandon		Ford		2001-04-11Laura		Hunt		2001-02-11Claire		Wong		2003-03-26Eric		Oneill		2002-01-01Lori		Espinoza	2004-12-31Arthur		Webster		2003-07-16Lauren		Cooke		2001-03-30Elizabeth	Torres		2002-12-31Ralph		Lowery		2003-11-04Patrick		Houston		2004-03-16Nancy		Kim		2003-06-08Ashley		Floyd		2002-01-21
+
+B) WITH AvgDepartmentPayment AS (
+    SELECT D.DepartmentId,
+           D.DepartmentName,
+           AVG(P.Payment) AS AverageDepartmentPayment
+      FROM Departments D
+           LEFT JOIN
+           Professors P ON D.DepartmentId = P.DepartmentId
+     GROUP BY D.DepartmentName
+)
+SELECT P.FirstName,
+       P.LastName,
+       P.Payment,
+       ADP.DepartmentName
+  FROM Professors P
+       LEFT JOIN
+       AvgDepartmentPayment ADP ON P.DepartmentId = ADP.DepartmentId
+ WHERE P.Payment < ADP.AverageDepartmentPayment
+ ORDER BY P.LastName ASC,
+          P.FirstName ASC;
+
+
+FirstName	LastName	Payment	DepartmentNameCheryl		Barr		5650	PhysicsJacqueline	Cervantes	6030	EnglishSteven		Harris		5000	PsychologyAustin		Jackson		6000	HistoryKirk		King		6580	PsychologyJay		Leblanc		5500	Computer ScienceWalter		Lee		5400	MathematicsAmanda		Mcconnell	7225	BiologyJeremy		Olson		6710	PhysicsPaul		Patel		5125	ChemistryFrederick	Richardson	6150	PsychologyAmanda		Rose		5550	MathematicsLouis		Schroeder	5540	Chemistry
+
+C) WITH DepartmentsStudentsData AS (
+    SELECT D.DepartmentId,
+           D.DepartmentName,
+           COUNT( * ) AS StudentsCountInDepartment,
+           SUM(S.Tuition * 2) AS AnnualDepartmentIncomeFromTuitions
+      FROM Departments D
+           JOIN
+           Programs P ON D.DepartmentId = P.DepartmentId
+           JOIN
+           Students S ON P.ProgramId = S.ProgramId
+     GROUP BY D.DepartmentId
+),
+DepartmentsProfessorsData AS (
+    SELECT D.DepartmentId,
+           D.DepartmentName,
+           COUNT( * ) AS ProfessorsCountInDepartment,
+           SUM(P.Payment * 12) AS AnnualPaymentsForProfessorsInDepartment
+      FROM Professors P
+           JOIN
+           Departments D ON P.DepartmentId = D.DepartmentId
+     GROUP BY D.DepartmentId
+)
+SELECT DSD.DepartmentName,
+       DSD.StudentsCountInDepartment,
+       DPD.ProfessorsCountInDepartment,
+       DSD.AnnualDepartmentIncomeFromTuitions,
+       DPD.AnnualPaymentsForProfessorsInDepartment,
+       DSD.AnnualDepartmentIncomeFromTuitions - DPD.AnnualPaymentsForProfessorsInDepartment AS AnnualIncome
+  FROM DepartmentsStudentsData DSD
+       JOIN
+       DepartmentsProfessorsData DPD ON DSD.DepartmentId = DPD.DepartmentId
+ WHERE AnnualIncome > 0 AND
+       DPD.ProfessorsCountInDepartment > 1;
+
+DepartmentName	StudentsCountInDepartment	ProfessorsCountInDepartment	AnnualDepartmentIncomeFromTuitions	AnnualPaymentsForProfessorsInDepartment		AnnualIncomeEnglish		50				2				245200					161160						84040Biology		47				2				230400					177900						52500

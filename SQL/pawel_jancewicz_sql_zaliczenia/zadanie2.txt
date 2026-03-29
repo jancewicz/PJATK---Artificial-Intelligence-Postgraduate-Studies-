@@ -1,0 +1,115 @@
+ZADANIE 2
+
+A) SELECT FirstName,
+       LastName,
+       Email,
+       Tuition
+  FROM Students
+ WHERE LastName = 'Gonzalez';
+
+FirstName	LastName	Email				TuitionDuane		Gonzalez	jamesroach@example.net		2000Nicholas	Gonzalez	joseph57@example.net		2700Natalie		Gonzalez	michelechandler@example.com	2100Gregory		Gonzalez	gilessheila@example.org		2000
+
+B) SELECT FirstName,
+       LastName,
+       DateOfBirth
+  FROM Professors
+ WHERE CAST (strftime('%Y', DateOfBirth) AS INT) BETWEEN 1975 AND 1979;
+
+FirstName	LastName	DateOfBirthJennifer	Davis		1976-12-14Frederick	Richardson	1978-10-15Cynthia		Carter		1975-06-19Cynthia		Suarez		1978-07-01Kara		Kim		1979-09-04Austin		Jackson		1979-08-29Paul		Patel		1975-12-28
+
+
+C) SELECT FirstName,
+       LastName,
+       DateOfBirth
+  FROM Students
+ WHERE CAST (strftime('%Y', DateOfBirth) AS INT) BETWEEN 1995 AND 1998 OR
+       CAST (strftime('%Y', DateOfBirth) AS INT) BETWEEN 2000 AND 2003
+ LIMIT 80;
+
+FirstName	LastName	DateOfBirthBrooke		Glover		1998-05-05Michael		Young		2002-02-05Megan		Williams	2001-03-21Danielle	Cole		1998-07-17Philip		Williams	2001-12-22Anna		Hampton		1998-11-15Nicole		Mckay		2002-05-30Thomas		Ballard		2003-04-20Jeremy		Mcknight	1997-09-13Amanda		Oneal		2000-09-07Joseph		Barker		1998-04-30Nicholas	Brown		1997-12-12Angela		Gonzales	1997-06-20Adam		Bray		2003-01-21Kayla		Smith		2000-08-21Roberto		Herman		1997-08-18Michelle	Mata		1997-10-31John		Farmer		2003-04-21Shelby		Russo		1998-07-25Wendy		Rios		2001-09-16Francisco	Giles		1998-05-16Scott		Hughes		1998-09-26Catherine	Morales		2003-05-23Vicki		Mitchell	2000-10-04Erin		Orozco		2001-05-10Kevin		Mitchell	2000-01-22Denise		Peterson	2000-10-01Leslie		Watson		2001-04-26Bradley		Smith		2000-04-28Kenneth		Wells		1998-05-11Dennis		Cantrell	2003-10-08Melissa		Clark		1998-03-19Daniel		Wilson		1997-11-27Janet		Miranda		2003-09-24Gregg		Harris		2001-02-23Kristin		Gray		2000-07-17Amy		Henson		2000-11-25Michael		Garcia		2000-02-20Damon		Johnson		1998-11-12Stephanie	Robertson	2000-01-22Aaron		Valentine	2000-03-21Alicia		White		2001-11-05Christopher	Jones		2001-10-27Gregory		Allen		2003-04-19Amy		Gardner		2001-09-07Devon		Douglas		2000-11-24Angela		Smith		2000-06-18Abigail		Romero		2001-02-25Rose		Gill		1997-07-23Robert		Turner		2000-05-23James		Torres		2000-08-25Patrick		Wood		1997-08-09Lauren		Scott		1997-11-07Brent		Davis		1998-08-12John		Smith		2002-04-06Richard		Parsons		2003-06-02Lori		Anderson	2000-04-08Laurie		Rogers		2000-01-24Larry		Larson		1997-08-25William		Castillo	2003-08-09Robert		Davidson	2003-05-21Richard		Tran		2000-11-07Stefanie	Lawson		2001-03-21Jodi		Reynolds	2003-09-07Kenneth		Mccann		1998-11-26Jerry		Roman		1998-09-01Wesley		Romero		2003-03-13Tina		Swanson		1997-12-27Stephanie	Brown		1998-12-24Susan		Long		2003-03-29Todd		Keller		1998-05-09Lauren		Chandler	2002-12-17Deborah		Jacobs		2001-05-14Kaitlyn		Cunningham	2002-03-17Melissa		Moreno		2000-06-04David		Sullivan	2002-11-25Kimberly	Cowan		2001-01-21Felicia		Johnson		2002-06-30Deanna		Cabrera		2000-04-29Adam		Holloway	2001-12-02
+
+D) SELECT StudentId,
+       FirstName,
+       LastName,
+       Email
+FROM Students WHERE FirstName LIKE 'F%';
+
+StudentId	FirstName	LastName	Email38		Francisco	Giles		bwalton@example.net50		Frank		Hall		zreynolds@example.org117		Felicia		Johnson		erinhall@example.com
+
+E) SELECT FirstName,
+       LastName,
+       DateOfBirth,
+       Email
+  FROM Professors
+ WHERE FirstName LIKE '%y%' OR
+       LastName LIKE '%y%';
+
+FirstName	LastName	DateOfBirth	EmailRandy		Woodward	1989-10-25	paul55@example.netLisa		Carey		1991-04-09	morrisonashley@example.orgJay		Leblanc		1986-10-10	dbaker@example.netJeremy		Olson		1974-08-07	jeremymartin@example.orgCynthia		Carter		1975-06-19	yeseniawalker@example.orgCynthia		Suarez		1978-07-01	amymiles@example.netCheryl		Barr		1970-02-13	brendandowns@example.netStephen		Clay		1963-11-23	vthompson@example.net
+
+F) SELECT FirstName,
+       LastName
+  FROM Students
+WHERE SUBSTR(LastName, 3, 1) = 'm';
+
+FirstName	LastNameAnna		HamptonLauren		GomezAbigail		RomeroJerry		RomanWesley		RomeroRyan		SummersNatalie		JimenezMargaret	SimmonsGeorge		LambertRobert		KimMorgan		 GomezPamela		SimsNancy		Kim
+
+
+E) SELECT EnrollmentId,
+       StudentId
+  FROM Enrollments
+ WHERE Grade IS NULL;
+
+EnrollmentId	StudentId131		44133		45136		46152		51215		72358		120580		194653		218702		234733		245775		259805		269847		283
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

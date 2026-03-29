@@ -1,0 +1,69 @@
+ZADANIE 4
+
+A) SELECT P.FirstName,
+       P.LastName,
+       D.DepartmentName
+  FROM Professors P
+       LEFT JOIN
+       Departments D ON P.DepartmentId = D.DepartmentId;
+
+FirstName	LastName	DepartmentNameWilliam		Alvarez		PhysicsRandy		Woodward	MathematicsKirk		King		PsychologyAmanda		Mcconnell	BiologySusan		Lowe		EconomicsLisa		Carey		PsychologyWalter		Lee		MathematicsJennifer	Davis		Computer ScienceFrederick	Richardson	PsychologyJay		Leblanc		Computer ScienceJeremy		Olson		PhysicsDaniel		Jones		MathematicsJacqueline	Cervantes	EnglishAmanda		Rose		MathematicsLisa		Williams	BiologyLouis		Schroeder	ChemistryEdwin		Smith		HistoryBrandon		Davila		ChemistryCynthia		Carter		EnglishCynthia		Suarez		HistoryCheryl		Barr		PhysicsDaniel		Ward		MathematicsPaula		Burgess		PhysicsStephen		Clay		MathematicsKara		Kim		SociologyAustin		Jackson		HistoryCharles		Saunders	PsychologyScott		Davis		ChemistrySteven		Harris		PsychologyPaul		Patel		Chemistry
+
+B) SELECT S.FirstName,
+       S.LastName,
+       E.Grade,
+       E.EnrollmentDate,
+       C.DepartmentId,
+       C.CourseName
+  FROM Students S
+       JOIN
+       Enrollments E ON S.StudentId = E.StudentId
+       JOIN
+       Courses C ON E.CourseId = C.CourseId
+ WHERE C.DepartmentId IN (6, 7);
+
+FirstName	LastName	Grade	EnrollmentDate	DepartmentId	CourseNameAngela		Gonzales	89	2022-09-04	7		Inorganic ChemistryChristopher	Spencer		87	2023-04-19	6		Cell BiologyVicki		Mitchell	83	2023-01-16	6		Cell BiologyKenneth		Wells		77	2023-03-13	7		Inorganic ChemistryAmy		Henson		16	2022-07-19	6		Cell BiologyAngela		Smith		69	2023-05-16	6		GeneticsAbigail		Romero		67	2023-02-19	6		Cell BiologyLaurie		Rogers		31	2023-06-12	7		Inorganic ChemistryJodi		Reynolds	35	2023-06-04	7		Organic ChemistryBridget		Hunter		6	2022-09-11	6		Cell BiologyTina		Swanson		67	2022-09-11	7		Organic ChemistryKimberly	Cowan		94	2022-06-30	7		Inorganic ChemistryFelicia		Johnson		95	2022-12-29	7		Organic ChemistryAdam		Holloway	65	2023-04-24	6		Cell BiologyRobert		Henry		94	2023-06-07	7		Inorganic ChemistryRobert		Henry		80	2022-11-09	7		Inorganic ChemistrySamuel		Donaldson	36	2023-03-08	6		GeneticsMichael		Woods		57	2022-09-03	7		Organic ChemistryMary		Rose		28	2022-08-31	6		Cell BiologyMary		Rose		46	2023-06-09	6		GeneticsTracy		Johns		73	2022-11-30	6		GeneticsCarrie		Sanchez		67	2022-07-02	6		GeneticsChristopher	Valdez		56	2023-04-24	7		Inorganic ChemistryJonathan	Hill		6	2023-03-13	6		GeneticsRichard		Trujillo	77	2022-11-08	7		Inorganic ChemistryToni		Harris		85	2023-01-27	7		Organic ChemistryJennifer	Reynolds	57	2022-08-25	7		Organic ChemistryRobert		Briggs		7	2022-11-17	7		Inorganic ChemistryEric		Perez		28	2023-02-09	7		Inorganic ChemistryEric		Perez		66	2022-09-21	7		Inorganic ChemistryJoanna		Paul		4	2022-06-29	7		Inorganic ChemistryCorey		Bennett		67	2022-11-29	7		Inorganic ChemistryErica		Mccall		26	2022-06-25	6		GeneticsJames		Lozano		47	2023-02-07	7		Organic ChemistryPhillip		Anderson	16	2022-10-05	7		Organic ChemistryMichael		Jones		79	2023-04-22	7		Organic ChemistryGregory		Pierce		80	2022-08-18	6		Cell BiologyMargaret	Reeves		100	2022-07-25	7		Organic ChemistryGavin		Fisher		90	2022-12-04	6		Cell BiologyKaren		Brown		52	2023-03-28	7		Organic ChemistryPerry		Hanson		20	2022-10-21	6		GeneticsStephen		Harrington	14	2023-03-26	6		GeneticsPatrick		Jensen		19	2023-03-26	6		Cell BiologyKendra		May		37	2023-03-18	6		GeneticsTimothy		Wong		98	2022-07-24	7		Organic ChemistrySusan		Potter		97	2023-05-02	6		GeneticsVincent		Graham		81	2023-03-24	6		GeneticsMark		Maldonado	25	2022-12-10	7		Organic ChemistryAndrea		Johnson		86	2023-03-22	7		Organic ChemistryRonald		Alexander		2022-11-27	7		Organic ChemistryLisa		Contreras	87	2022-12-27	6		Cell BiologyLuis		Davenport	35	2023-05-12	6		Cell BiologyMorgan		Gomez		49	2023-05-28	6		Cell BiologyAdam		Carlson		58	2023-04-13	7		Organic ChemistryKurt		Whitney		88	2022-12-31	7		Organic ChemistryRebecca		Matthews	96	2023-02-27	7		Inorganic ChemistryAshley		Floyd		15	2022-12-26	6		Genetics
+
+
+C) SELECT S.FirstName,
+       S.LastName,
+       S.DateOfBirth,
+       S.Tuition,
+       P.ProgramName
+  FROM Students S
+       JOIN
+       Programs P ON S.ProgramId = P.ProgramId
+       JOIN
+       Departments D ON P.DepartmentId = D.DepartmentId
+ WHERE S.DateOfBirth > '2000-12-31' AND
+       D.DepartmentName = 'History';
+
+FirstName	LastName	DateOfBirth	Tuition	ProgramNameMichael		Young		2002-02-05	2700	HistoryJohn		Farmer		2003-04-21	2800	Art HistoryLeslie		Watson		2001-04-26	2200	Art HistoryDennis		Cantrell	2003-10-08	2100	Political ScienceGregg		Harris		2001-02-23	2600	Art HistoryRobert		Davidson	2003-05-21	2700	HistoryTheresa		Rodgers		2005-02-06	2500	HistoryJennifer	Huffman		2004-08-29	2700	HistoryKaitlyn		Cunningham	2002-03-17	2900	HistoryDavid		Sullivan	2002-11-25	2400	Political ScienceKimberly	Cowan		2001-01-21	2300	HistoryBenjamin	Jones		2004-07-14	2200	Art HistoryGabrielle	Decker		2002-11-08	2000	Political ScienceKenneth		Robinson	2005-03-05	2200	Political ScienceDeborah		Cain		2003-02-18	2200	Art HistoryDennis		Gonzales	2003-12-06	2600	Art HistoryLori		Espinoza	2004-12-31	2100	Political Science
+
+D) SELECT D.DepartmentName,
+       P.ProgramName,
+       S.FirstName,
+       S.LastName
+  FROM Departments D
+       LEFT JOIN
+       Programs P ON D.DepartmentId = P.DepartmentId
+       LEFT JOIN
+       Students S ON P.ProgramId = S.ProgramId
+ ORDER BY D.DepartmentName ASC,
+          S.LastName ASC,
+          S.FirstName ASC
+ LIMIT 80;
+
+DepartmentName	ProgramName		FirstName	LastNameBiology		Health Sciences		Lori		AndersonBiology		Environmental Science	Kimberly	BlakeBiology		Environmental Science	Albert		BowenBiology		Health Sciences		Robyn		BullockBiology		Health Sciences		Lauren		CookeBiology		Biology			Whitney		DiazBiology		Health Sciences		Willie		DuranBiology		Environmental Science	Preston		FloydBiology		Environmental Science	Diana		FrazierBiology		Biology			Brooke		GloverBiology		Health Sciences		Natalie		GonzalezBiology		Environmental Science	Jared		GordonBiology		Health Sciences		Hayley		GrahamBiology		Environmental Science	Tammie		GriffinBiology		Health Sciences		Toni		HarrisBiology		Health Sciences		Lauren		JohnsonBiology		Health Sciences		Christopher	JonesBiology		Environmental Science	Todd		KellerBiology		Environmental Science	Anthony		LarsonBiology		Environmental Science	Darren		LewisBiology		Biology			Ralph		LoweryBiology		Environmental Science	James		LozanoBiology		Biology			Joseph		LynnBiology		Biology			Kimberly	MarquezBiology		Health Sciences		Rebecca		MatthewsBiology		Environmental Science	Thomas		MeadowsBiology		Environmental Science	Janet		MirandaBiology		Health Sciences		Erin		OrozcoBiology		Biology			Kathleen	PerkinsBiology		Health Sciences		Ronald		PetersBiology		Biology			Bryan		PhelpsBiology		Biology			Tracy		PowellBiology		Biology			Margaret	ReevesBiology		Biology			Eric		RothBiology		Health Sciences		Carrie		SanchezBiology		Environmental Science	Margaret	SimmonsBiology		Biology			Ryan		SummersBiology		Biology			Erin		ThomasBiology		Health Sciences		Andrea		WaltonBiology		Environmental Science	Trevor		WatsonBiology		Environmental Science	Kenneth		WellsBiology		Health Sciences		Alicia		WhiteBiology		Biology			Philip		WilliamsBiology		Biology			Daniel		WilsonBiology		Environmental Science	Timothy		WongBiology		Environmental Science	Debra		WoodBiology		Environmental Science	Isaac		WoodChemistry	Philosophy		Matthew		AdamsChemistry	Chemistry		Rachel		AndersonChemistry	Chemistry		Corey		BennettChemistry	Philosophy		Gabrielle	BrennanChemistry	Philosophy		Deanna		CabreraChemistry	Philosophy		William		CastilloChemistry	Philosophy		Judy		CunninghamChemistry	Philosophy		Brent		DavisChemistry	Philosophy		Brandon		FordChemistry	Philosophy		Morgan		GomezChemistry	Chemistry		Gregory		GonzalezChemistry	Chemistry		Elizabeth	JenningsChemistry	Chemistry		Patrick		JensenChemistry	Philosophy		Natalie		JimenezChemistry	Chemistry		Felicia		JohnsonChemistry	Chemistry		George		LambertChemistry	Chemistry		Susan		LongChemistry	Chemistry		Michael		MccartyChemistry	Chemistry		Jeffrey		OchoaChemistry	Chemistry		Mary		ParkerChemistry	Chemistry		Rebecca		PaulChemistry	Chemistry		Danielle	PrestonChemistry	Chemistry		Jennifer	ReynoldsChemistry	Chemistry		Jodi		ReynoldsChemistry	Chemistry		Tara		RodgersChemistry	Philosophy		Laurie		RogersChemistry	Chemistry		Mary		RoseChemistry	Chemistry		Shawn		RussellChemistry	Philosophy		Jimmy		SmithChemistry	Philosophy		Christopher	SpencerChemistry	Philosophy		Elizabeth	TorresChemistry	Chemistry		Melissa		WilliamsChemistry	Philosophy		Ronald		Willis
+
+E) SELECT P.FirstName,
+       P.LastName,
+       COALESCE(CAST (C.Location AS TEXT), 'Unknown') AS ClassNumber
+  FROM Professors P
+       INNER JOIN
+       Departments D ON P.DepartmentId = D.DepartmentId
+       LEFT JOIN
+       Classrooms C ON C.DepartmentId = D.DepartmentId;
+
+FirstName	LastName	ClassNumberWilliam		Alvarez		4Randy		Woodward	2Kirk		King		UnknownAmanda		Mcconnell	UnknownSusan		Lowe		UnknownLisa		Carey		UnknownWalter		Lee		2Jennifer	Davis		1Jennifer	Davis		3Frederick	Richardson	UnknownJay		Leblanc		1Jay		Leblanc		3Jeremy		Olson		4Daniel		Jones		2Jacqueline	Cervantes	5Amanda		Rose		2Lisa		Williams	UnknownLouis		Schroeder	UnknownEdwin		Smith		UnknownBrandon		Davila		UnknownCynthia		Carter		5Cynthia		Suarez		UnknownCheryl		Barr		4Daniel		Ward		2Paula		Burgess		4Stephen		Clay		2Kara		Kim		UnknownAustin		Jackson		UnknownCharles		Saunders	UnknownScott		Davis		UnknownSteven		Harris		UnknownPaul		Patel		Unknown
+

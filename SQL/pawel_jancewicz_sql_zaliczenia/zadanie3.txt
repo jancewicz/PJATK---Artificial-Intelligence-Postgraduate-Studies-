@@ -1,0 +1,63 @@
+ZADANIE 3 
+
+A) SELECT EnrollmentId AS enrollment_id,
+       StudentId AS student_id,
+       CourseId AS course_id,
+       EnrollmentDate AS enrollment_date,
+       COALESCE(Grade, 'Unknown') AS Grade
+  FROM Enrollments
+ LIMIT 80;
+
+enrollment_id	student_id	course_id	enrollment_date	Grade1		1		15		2023-05-31	894		2		9		2022-11-08	835		2		1		2023-03-21	346		2		4		2023-03-02	917		3		25		2022-11-30	758		3		16		2023-04-09	39		3		27		2022-11-25	9010		4		22		2022-06-22	7013		5		37		2022-08-16	7414		5		10		2022-08-10	5815		5		10		2022-07-29	4616		6		36		2022-06-25	3422		8		34		2022-08-25	3123		8		34		2022-11-10	3624		8		22		2023-05-27	4625		9		16		2023-04-03	1626		9		10		2022-08-21	7528		10		20		2022-11-05	8729		10		2		2023-02-13	9430		10		8		2023-03-29	4331		11		32		2023-03-04	1732		11		3		2022-10-06	9834		12		4		2022-10-11	7735		12		2		2022-12-21	3936		12		14		2022-10-02	1837		13		5		2023-01-06	8038		13		32		2022-08-22	1246		16		1		2023-01-26	6447		16		8		2023-01-15	7749		17		34		2022-06-28	8352		18		4		2023-01-31	1453		18		31		2022-09-04	8954		18		32		2023-05-08	9561		21		1		2022-08-11	3262		21		23		2022-09-27	8063		21		37		2022-08-19	8664		22		19		2022-12-13	6367		23		24		2022-07-19	8570		24		7		2022-07-14	2273		25		15		2023-03-26	3874		25		8		2022-08-17	7276		26		4		2023-02-03	3377		26		2		2023-04-10	2778		26		8		2022-11-04	2379		27		18		2023-04-02	9780		27		7		2022-10-11	8781		27		24		2022-06-18	3985		29		35		2023-03-12	7386		29		14		2023-02-02	8587		29		22		2022-11-04	488		30		9		2022-11-03	4589		30		12		2022-10-09	1991		31		9		2022-08-12	3894		32		32		2022-12-03	8395		32		19		2022-12-28	996		32		14		2022-10-19	84103		35		26		2023-04-04	40104		35		15		2023-02-11	3106		36		28		2023-04-19	87109		37		34		2023-01-12	86110		37		24		2022-09-23	80115		39		17		2023-05-26	14116		39		20		2022-06-19	46118		40		19		2022-10-15	14121		41		4		2023-03-20	82122		41		28		2023-01-16	83124		42		17		2022-08-09	55125		42		33		2022-12-28	11127		43		8		2023-01-10	22128		43		25		2022-10-30	71129		43		19		2022-11-13	95130		44		35		2023-03-22	18131		44		23		2023-01-15	Unknown132		44		12		2022-08-26	42133		45		5		2023-05-20	Unknown136		46		19		2023-05-27	Unknown139		47		35		2023-03-20	40140		47		15		2023-04-10	34142		48		32		2022-08-24	21143		48		7		2022-10-23	32
+
+B) SELECT FirstName,
+       LastName,
+       PhoneNumber,
+       LENGTH(PhoneNumber) AS PhoneNumLength
+  FROM Professors
+ ORDER BY phone_num_length DESC,
+          LENGTH(Email) DESC,
+          LastName ASC,
+          FirstName ASC;
+
+FirstName	LastName	PhoneNumber		PhoneNumLengthKara		Kim		001-871-810-5500x27439	22Lisa		Williams	001-728-652-7373x21517	22Amanda		Mcconnell	001-679-146-0755x61254	22Randy		Woodward	001-526-036-5885x70981	22Brandon		Davila		+1-852-634-4923x70575	21Walter		Lee		001-080-641-2976x5321	21Cheryl		Barr		+1-601-901-6770x6961	20Charles		Saunders	328.132.8527x68729	18Scott		Davis		755-571-8691x7903	17Susan		Lowe		053-718-2274x8857	17Daniel		Ward		(753)901-7670x611	17Paula		Burgess		121-349-7518x416	16Lisa		Carey		001-740-033-0833	16Louis		Schroeder	342-335-9673x132	16Edwin		Smith		001-922-214-0521	16Jacqueline	Cervantes	+1-430-215-1516		15Jeremy		Olson		+1-432-000-2205		15Cynthia		Suarez		+1-872-376-3869		15Kirk		King		(403)268-8882		13Cynthia		Carter		793.606.3826		12Austin		Jackson		246.087.0032		12Amanda		Rose		706.560.3767		12Stephen		Clay		188-032-7807		12Daniel		Jones		238-928-0507		12Frederick	Richardson	268-532-5412		12Paul		Patel		732.905.7532		12Jennifer	Davis		509-784-8060		12William		Alvarez		909-737-3692		12Jay		Leblanc		245-302-4484		12Steven		Harris		5133475207		10
+
+C) SELECT EnrollmentId,
+       STRFTIME('%m/%Y', EnrollmentDate) AS EnrollmentDate      
+  FROM Enrollments
+  LIMIT 80;
+
+EnrollmentId	EnrollmentDate1		05/20234		11/20225		03/20236		03/20237		11/20228		04/20239		11/202210		06/202213		08/202214		08/202215		07/202216		06/202222		08/202223		11/202224		05/202325		04/202326		08/202228		11/202229		02/202330		03/202331		03/202332		10/202234		10/202235		12/202236		10/202237		01/202338		08/202246		01/202347		01/202349		06/202252		01/202353		09/202254		05/202361		08/202262		09/202263		08/202264		12/202267		07/202270		07/202273		03/202374		08/202276		02/202377		04/202378		11/202279		04/202380		10/202281		06/202285		03/202386		02/202387		11/202288		11/202289		10/202291		08/202294		12/202295		12/202296		10/2022103		04/2023104		02/2023106		04/2023109		01/2023110		09/2022115		05/2023116		06/2022118		10/2022121		03/2023122		01/2023124		08/2022125		12/2022127		01/2023128		10/2022129		11/2022130		03/2023131		01/2023132		08/2022133		05/2023136		05/2023139		03/2023140		04/2023142		08/2022143		10/2022
+
+D) SELECT EnrollmentId,
+       StudentId,
+       CourseId,
+       date(EnrollmentDate, '+6 month') AS NextEnrollmentDate
+  FROM Enrollments
+ WHERE Grade < 10;
+
+EnrollmentId	StudentId	CourseId	NextEnrollmentDate8		3		16		2023-10-0987		29		22		2023-05-0495		32		19		2023-06-28104		35		15		2023-08-11157		53		34		2023-04-07161		54		1		2023-06-12176		59		24		2023-05-30296		99		25		2023-06-25310		104		28		2023-03-11312		104		21		2023-08-18317		106		22		2023-08-25330		110		6		2023-08-14356		119		3		2023-05-30377		126		2		2023-04-11378		126		34		2023-01-26397		133		15		2023-09-22424		142		9		2023-08-07425		142		16		2023-05-22487		163		34		2023-03-03497		166		23		2023-02-02502		168		29		2023-09-13533		178		31		2023-05-17553		185		31		2022-12-29581		194		6		2023-07-08755		252		33		2023-04-24854		285		1		2023-04-01862		288		19		2023-10-05892		298		1		2023-11-27
+
+E) SELECT StudentId,
+       FirstName,
+       LastName,
+       DateOfBirth
+  FROM Students
+ WHERE STRFTIME('%Y', DateOfBirth) = '2000';
+
+StudentId	FirstName	LastName	DateOfBirth14		Amanda		Oneal		2000-09-0726		Kayla		Smith		2000-08-2141		Vicki		Mitchell	2000-10-0444		Kevin		Mitchell	2000-01-2247		Denise		Peterson	2000-10-0149		Bradley		Smith		2000-04-2861		Kristin		Gray		2000-07-1763		Amy		Henson		2000-11-2564		Michael		Garcia		2000-02-2066		Stephanie	Robertson	2000-01-2267		Aaron		Valentine	2000-03-2174		Devon		Douglas		2000-11-2475		Angela		Smith		2000-06-1878		Robert		Turner		2000-05-2379		James		Torres		2000-08-2587		Lori		Anderson	2000-04-0889		Laurie		Rogers		2000-01-2496		Richard		Tran		2000-11-07114		Melissa		Moreno		2000-06-04118		Deanna		Cabrera		2000-04-29126		Kendra		Molina		2000-09-06129		Alex		Mills		2000-05-26146		Craig		Stewart		2000-06-04174		Stephanie	Lopez		2000-10-22192		Elizabeth	Frey		2000-05-13194		Juan		Barnes		2000-12-23204		Margaret	Reeves		2000-11-14218		Ronald		Willis		2000-05-02220		Perry		Hanson		2000-12-24222		Kyle		Jones		2000-07-20223		Nicholas	Mcintyre	2000-02-04246		Jennifer	Smith		2000-10-16255		Jared		Gordon		2000-04-23256		George		Lambert		2000-05-09265		Luis		Davenport	2000-11-29277		Isaac		Wood		2000-01-25288		Lauren		Johnson		2000-01-26293		Judy		Cunningham	2000-09-27
+
+F) SELECT FirstName,
+       LastName,
+       UPPER(Email) AS uppercase_email
+  FROM Professors;
+
+FirstName	LastName	uppercase_emailWilliam		Alvarez		LWHITE@EXAMPLE.ORGRandy		Woodward	PAUL55@EXAMPLE.NETKirk		King		REBEKAH66@EXAMPLE.ORGAmanda		Mcconnell	KEVIN28@EXAMPLE.ORGSusan		Lowe		OLSONCORY@EXAMPLE.NETLisa		Carey		MORRISONASHLEY@EXAMPLE.ORGWalter		Lee		GREENJODI@EXAMPLE.ORGJennifer	Davis		BTURNER@EXAMPLE.COMFrederick	Richardson	MATTHEW71@EXAMPLE.NETJay		Leblanc		DBAKER@EXAMPLE.NETJeremy		Olson		JEREMYMARTIN@EXAMPLE.ORGDaniel		Jones		JESSICA65@EXAMPLE.NETJacqueline	Cervantes	SAMANTHAWILSON@EXAMPLE.ORGAmanda		Rose		WILSONSARA@EXAMPLE.ORGLisa		Williams	WATKINSMARK@EXAMPLE.ORGLouis		Schroeder	XWHITEHEAD@EXAMPLE.NETEdwin		Smith		BRIVERA@EXAMPLE.NETBrandon		Davila		OBRIENJEFFREY@EXAMPLE.NETCynthia		Carter		YESENIAWALKER@EXAMPLE.ORGCynthia		Suarez		AMYMILES@EXAMPLE.NETCheryl		Barr		BRENDANDOWNS@EXAMPLE.NETDaniel		Ward		JPOWELL@EXAMPLE.NETPaula		Burgess		ESTRADAGREGORY@EXAMPLE.ORGStephen		Clay		VTHOMPSON@EXAMPLE.NETKara		Kim		REEVESPATRICIA@EXAMPLE.COMAustin		Jackson		CRAWFORDRYAN@EXAMPLE.NETCharles		Saunders	CYNTHIA61@EXAMPLE.COMScott		Davis		TAYLORDAKOTA@EXAMPLE.COMSteven		Harris		JOHNNY38@EXAMPLE.COMPaul		Patel		COXWANDA@EXAMPLE.ORG
+
+
+G) SELECT FirstName,
+       LastName,
+       ROUND(Payment / 100.0) * 100 AS RoundedPayment
+  FROM Professors;
+
+FirstName	LastName	RoundedPaymentWilliam		Alvarez		7700Randy		Woodward	7400Kirk		King		6600Amanda		Mcconnell	7200Susan		Lowe		6300Lisa		Carey		7800Walter		Lee		5400Jennifer	Davis		7800Frederick	Richardson	6200Jay		Leblanc		5500Jeremy		Olson		6700Daniel		Jones		6900Jacqueline	Cervantes	6000Amanda		Rose		5600Lisa		Williams	7600Louis		Schroeder	5500Edwin		Smith		7500Brandon		Davila		7000Cynthia		Carter		7400Cynthia		Suarez		7000Cheryl		Barr		5700Daniel		Ward		7700Paula		Burgess		7400Stephen		Clay		7000Kara		Kim		7600Austin		Jackson		6000Charles		Saunders	8000Scott		Davis		6800Steven		Harris		5000Paul		Patel		5100

@@ -1,0 +1,69 @@
+ZADANIE 7
+
+A) CREATE VIEW MathProfessors 
+AS 
+SELECT
+       P.FirstName,
+       P.LastName
+  FROM Professors P
+  JOIN Departments D ON P.DepartmentId = D.DepartmentId
+  WHERE D.DepartmentName = 'Mathematics'
+
+SELECT * FROM MathProfessors;
+
+FirstName	LastNameRandy		WoodwardWalter		LeeDaniel		JonesAmanda		RoseDaniel		WardStephen		Clay
+
+B) CREATE VIEW EarlyGenZ AS
+WITH StudentsData AS (
+        SELECT S.FirstName,
+               S.LastName,
+               C.CourseName,
+               CAST (STRFTIME('%Y', DateOfBirth) AS INT) AS YearOfBirth
+          FROM Students S
+               JOIN
+               Enrollments E ON S.StudentId = E.StudentId
+               JOIN
+               Courses C ON C.CourseId = E.CourseId
+    )
+    SELECT FirstName,
+           LastName,
+           CourseName
+      FROM StudentsData
+     WHERE YearOfBirth BETWEEN 1997 AND 2000;
+
+SELECT * FROM EarlyGenZ;
+
+FirstName	LastName	CourseNameBrooke		Glover		American LiteratureDanielle	Cole		Quantum Field TheoryKaren		Jones		Psychological Research MethodsKaren		Jones		Psychological Research MethodsKaren		Jones		Quantum Field TheoryAnna		Hampton		European HistoryAnna		Hampton		StatisticsJeremy		Mcknight	Linear AlgebraJeremy		Mcknight	Database ManagementJeremy		Mcknight	Shakespearean LiteratureElizabeth	Wilson		Modern PhysicsElizabeth	Wilson		MicroeconomicsJoseph		Barker		Introduction to ProgrammingJoseph		Barker		Data StructuresNicholas	Brown		Psychological Research MethodsAngela		Gonzales	Linear AlgebraAngela		Gonzales	Inorganic ChemistryAngela		Gonzales	MicroeconomicsLauren		Gomez		Software EngineeringWilliam		Flores		American LiteratureWilliam		Flores		Data StructuresKayla		Smith		Linear AlgebraKayla		Smith		Database ManagementKayla		Smith		Data StructuresRoberto		Herman		Computer NetworksRoberto		Herman		World HistoryRoberto		Herman		English LiteratureShelby		Russo		AlgorithmsChristopher	Spencer		Cell BiologyScott		Hughes		Ancient HistoryScott		Hughes		Number TheoryVicki		Mitchell	Linear AlgebraVicki		Mitchell	Cell BiologyMargaret	Thomas		Data StructuresMargaret	Thomas		American PoetryMargaret	Thomas		Software EngineeringKevin		Mitchell	Cognitive PsychologyKevin		Mitchell	ElectromagnetismKevin		Mitchell	Quantum MechanicsDenise		Peterson	Cognitive PsychologyDenise		Peterson	American LiteratureBradley		Smith		Modern PhysicsBradley		Smith		MacroeconomicsKenneth		Wells		Inorganic ChemistryKenneth		Wells		Introduction to ProgrammingKelly		Lawson		Psychological Research MethodsKelly		Lawson		Quantum MechanicsKelly		Lawson		Shakespearean LiteratureMelissa		Clark		Modern PhysicsMelissa		Clark		Introduction to ProgrammingMelissa		Clark		American PoetryDaniel		Wilson		Ancient CivilizationTrevor		Barton		Number TheoryTrevor		Barton		English LiteratureMatthew		Adams		Mathematical LogicMatthew		Adams		MacroeconomicsKristin		Gray		Number TheoryKristin		Gray		MicroeconomicsBrandon		Cunningham	Cognitive PsychologyAmy		Henson		Cell BiologyAmy		Henson		Social PsychologyMichael		Garcia		English CompositionMichael		Garcia		Medieval HistoryMichael		Garcia		Cognitive PsychologyStephanie	Robertson	European HistoryStephanie	Robertson	ElectromagnetismAaron		Valentine	Social PsychologyAaron		Valentine	Introduction to ProgrammingAaron		Valentine	Sociological TheoryAngela		Smith		GeneticsRose		Gill		Quantum MechanicsRobert		Turner		MicroeconomicsJames		Torres		ElectromagnetismPatrick		Wood		Modern PhysicsPatrick		Wood		Cognitive PsychologyPatrick		Wood		American LiteratureBrent		Davis		Shakespearean LiteratureBrent		Davis		Discrete MathematicsBrent		Davis		Cognitive PsychologyLori		Anderson	Software EngineeringLori		Anderson	Sociological TheoryLori		Anderson	Mathematical LogicJason		Robinson	Introduction to ProgrammingLaurie		Rogers		Inorganic ChemistryLaurie		Rogers		StatisticsLarry		Larson		European HistoryLarry		Larson		Social PsychologyLarry		Larson		English LiteratureRichard		Tran		Psychological Research MethodsJon		Weaver		Quantum MechanicsKenneth		Mccann		Software EngineeringJerry		Roman		Mathematical LogicJerry		Roman		Modern PhysicsBridget		Hunter		Cell BiologyBridget		Hunter		Introduction to ProgrammingBridget		Hunter		Mathematical LogicTina		Swanson		Organic ChemistryTina		Swanson		American LiteratureTina		Swanson		Ancient CivilizationStephanie	Brown		Linear AlgebraStephanie	Brown		Quantum Field TheoryTodd		Keller		Software EngineeringTodd		Keller		Mathematical LogicDeanna		Cabrera		Sociological TheoryRebecca		Paul		Psychological Research MethodsRebecca		Paul		Quantum Field TheoryRebecca		Paul		English CompositionSusan		Browning	ThermodynamicsAmanda		Harrison	English CompositionKendra		Molina		Number TheoryKendra		Molina		Database ManagementKendra		Molina		Psychological Research MethodsAlex		Mills		Calculus IAlex		Mills		ElectromagnetismAlex		Mills		Medieval HistoryBrett		Perez		English LiteratureBrett		Perez		Calculus IBrett		Perez		Discrete MathematicsPaul		Hicks		Psychological Research MethodsMorgan		Matthews	Modern PhysicsPaula		Walker		Number TheoryPaula		Walker		Modern PhysicsCraig		Stewart		Medieval HistoryCraig		Stewart		Number TheoryCraig		Stewart		StatisticsMichael		Woods		ThermodynamicsMichael		Woods		Data StructuresMichael		Woods		Organic ChemistryRyan		Summers		ThermodynamicsAlbert		Bowen		StatisticsHayley		Graham		Social PsychologyCarrie		Sanchez		Linear AlgebraCarrie		Sanchez		GeneticsRichard		Trujillo	Inorganic ChemistryRichard		Trujillo	Quantum MechanicsRichard		Trujillo	American LiteratureToni		Harris		Organic ChemistryStephanie	Lopez		Mathematical LogicStephanie	Lopez		European HistoryJennifer	Russell		European HistoryPaul		White		Calculus IJoanna		Paul		Inorganic ChemistryJoanna		Paul		American LiteratureJoanna		Paul		Quantum Field TheoryNatalie		Jimenez		World HistoryNatalie		Jimenez		Number TheoryNatalie		Jimenez		English CompositionErica		Mccall		GeneticsElizabeth	Frey		World HistoryJuan		Barnes		Linear AlgebraJuan		Barnes		English CompositionMichael		Jones		Data StructuresMichael		Jones		Organic ChemistryGregory		Pierce		ell BiologyMargaret	Reeves		Data StructuresMargaret	Reeves		Organic ChemistryTammie		Griffin		Software EngineeringGavin		Fisher		Cell BiologyRobert		Caldwell	Shakespearean LiteratureRonald		Willis		MicroeconomicsRonald		Willis		Calculus IRonald		Willis		American LiteraturePerry		Hanson		Shakespearean LiteraturePerry		Hanson		Mathematical LogicPerry		Hanson		GeneticsGeorge		Eaton		Shakespearean LiteratureGeorge		Eaton		Software EngineeringGeorge		Eaton		Linear AlgebraKyle		Jones		Psychological Research MethodsKyle		Jones		MicroeconomicsStephen		Harrington	American LiteratureStephen		Harrington	GeneticsWilliam		Johnson		Linear AlgebraPatrick		Jensen		StatisticsPatrick		Jensen		Cell BiologyTimothy		Wong		English LiteratureTimothy		Wong		Organic ChemistryTimothy		Wong		Cognitive PsychologyAllison		Beck		Linear AlgebraAllison		Beck		Ancient HistoryAllison		Beck		Social PsychologyNicholas	Baker		American LiteratureVincent		Graham		GeneticsVincent		Graham		Quantum Field TheoryVincent		Graham		Linear AlgebraRegina		Atkins		Quantum Field TheoryRegina		Atkins		Mathematical LogicDeborah		Turner		American PoetryDeborah		Turner		Calculus IDeborah		Turner		Medieval HistoryJennifer	Smith		Sociological TheoryJennifer	Smith		Sociological TheoryMatthew		Perez		American PoetrySteven		Rangel		Database ManagementSteven		Rangel		MacroeconomicsGeorge		Lambert		Introduction to ProgrammingGeorge		Lambert		Sociological TheoryGeorge		Lambert		World HistoryRonald		Alexander	Organic ChemistryRonald		Alexander	Mathematical LogicRonald		Alexander	Social PsychologyAmanda		Williams	Quantum MechanicsAmanda		Williams	Psychological Research MethodsAmanda		Williams	Discrete MathematicsLisa		Contreras	Cell BiologyLisa		Contreras	Mathematical LogicLuis		Davenport	Number TheoryLuis		Davenport	Cell BiologySamantha	Johnson		Discrete MathematicsSamantha	Johnson		StatisticsSamantha	Johnson		European HistoryMichelle	Martin		Ancient CivilizationMichelle	Martin		MacroeconomicsMorgan		Gomez		ThermodynamicsMorgan		Gomez		Calculus IMorgan		Gomez		Cell BiologyIsaac		Wood		Medieval HistoryIsaac		Wood		AlgorithmsElizabeth	Smith		Introduction to ProgrammingJason		Guzman		Cognitive PsychologyJason		Guzman		MacroeconomicsTerri		Mccoy		Quantum MechanicsTerri		Mccoy		Linear AlgebraAdam		Carlson		Organic ChemistryDanielle	Preston		Medieval HistoryPamela		Sims		Mathematical LogicPamela		Sims		Introduction to ProgrammingVeronica	Brooks		MicroeconomicsVeronica	Brooks		American LiteratureLauren		Johnson		Software EngineeringLauren		Johnson		StatisticsLauren		Johnson		American LiteratureKelsey		Pope		English LiteratureJonathan	Thompson	Medieval HistoryJudy		Cunningham	Number TheoryBrooke		Pratt		Introduction to ProgrammingKurt		Whitney		Mathematical LogicKurt		Whitney		European HistoryKurt		Whitney		Organic ChemistryRebecca		Matthews	Introduction to ProgrammingRebecca		Matthews	Inorganic ChemistryRebecca		Matthews	American Poetry
+
+C) CREATE VIEW SocialDepartments AS
+    SELECT P.FirstName,
+           P.LastName,
+           P.Payment * 1.15 AS Payment
+      FROM Professors P
+           JOIN
+           Departments D ON P.DepartmentId = D.DepartmentId
+     WHERE D.DepartmentName = 'Psychology' OR
+           D.DepartmentName = 'Sociology';
+
+SELECT * FROM SocialDepartments;
+
+FirstName	LastName	PaymentKirk		King		7567.0Lisa		Carey		8970Frederick	Richardson	7072.5Kara		Kim		8786Charles		Saunders	9188.5Steven		Harris		5750
+
+D) SELECT DepartmentName AS Name
+  FROM Departments
+UNION
+SELECT ProgramName
+  FROM Programs
+UNION
+SELECT CourseName
+  FROM Courses;
+
+NameAlgorithmsAmerican LiteratureAmerican PoetryAncient CivilizationAncient HistoryAnthropologyArt HistoryBiologyBusiness AdministrationCalculus ICell BiologyChemistryCognitive PsychologyComputer NetworksComputer ScienceData StructuresDatabase ManagementDiscrete MathematicsEconomicsElectromagnetismEnglishEnglish CompositionEnglish LiteratureEnvironmental ScienceEuropean HistoryFilm and Media StudiesGeneticsHealth SciencesHistoryInorganic ChemistryIntroduction to ProgrammingLinear AlgebraMacroeconomicsMathematical LogicMathematicsMedieval HistoryMicroeconomicsModern PhysicsMusicNumber TheoryOrganic ChemistryPhilosophyPhysicsPolitical SciencePsychological Research MethodsPsychologyQuantum Field TheoryQuantum MechanicsShakespearean LiteratureSocial PsychologySociological TheorySociologySoftware EngineeringStatisticsTheater StudiesThermodynamicsWorld History
+
+E) SELECT LastName
+  FROM Professors
+INTERSECT
+SELECT LastName
+  FROM Students;
+
+LastNameDavisHarrisJonesKimLeeRoseSmithWilliams

@@ -1,0 +1,38 @@
+ZADANIE 5
+
+A) SELECT MAX(Payment) AS MaxIncome,
+       MIN(Payment) AS MinIncome,
+       ROUND(AVG(Payment), 2) AS AvgIncome,
+       SUM(Payment) AS AllProfessorsPaymentsSummed,
+       COUNT(ProfessorId) AS ProfessorsCount
+  FROM Professors;
+
+MaxIncome	MinIncome	AvgIncome	AllProfessorsPaymentsSummed	ProfessorsCount7990		5000		6709.5		201285				30
+
+B) SELECT STRFTIME('%Y', DateOfBirth) AS Year,
+       COUNT( * ) AS StudentsCountBornInYear
+  FROM Students
+ GROUP BY Year;
+
+Year	StudentsCountBornInYear1997	241998	371999	482000	382001	372002	262003	382004	312005	21
+
+C) SELECT P.ProgramId,
+       P.ProgramName,
+       SUM(S.Tuition * 6) AS ThreeYearsTuitionsSumPerProgram
+  FROM Students S
+       JOIN
+       Programs P ON S.ProgramId = P.ProgramId
+ GROUP BY P.ProgramName;
+
+
+ProgramId	ProgramName		ThreeYearsTuitionsSumPerProgram15		Anthropology		25860014		Art History		2064006		Biology			20940011		Business Administration	2928007		Chemistry		2772001		Computer Science	1692008		Economics		2076004		English			21720013		Environmental Science	26040019		Film and Media Studies	22500020		Health Sciences		2214005		History			1746002		Mathematics		21000016		Music			17040017		Philosophy		1938003		Physics			30000012		Political Science	1782009		Psychology		17700010		Sociology		34440018		Theater Studies		123000
+
+D) SELECT D.DepartmentName,
+       AVG(P.Payment) AS AveragePayment
+  FROM Departments D
+       LEFT JOIN
+       Professors P ON D.DepartmentId = P.DepartmentId
+ GROUP BY D.DepartmentName
+HAVING AveragePayment > 7000;
+
+DepartmentName	AveragePaymentBiology		7412.5Sociology	7640
