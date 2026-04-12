@@ -1,0 +1,9 @@
+tensorflow==2.18.1
+keras-tuner==1.4.8
+pandas
+seaborn
+matplotlib
+scikit-learn
+pydot 
+graphviz
+setuptools<70.0.0
