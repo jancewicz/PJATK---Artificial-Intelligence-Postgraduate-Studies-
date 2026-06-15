@@ -29,7 +29,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-from typing import Tuple, Dict, List, Any
+from typing import Tuple, Dict, List, Any, Literal
 
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import OneHotEncoder, OrdinalEncoder
@@ -37,8 +37,15 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
 from sklearn.naive_bayes import CategoricalNB
-from sklearn.metrics import (accuracy_score, precision_score, recall_score,
-                             f1_score, roc_auc_score, confusion_matrix, roc_curve)
+from sklearn.metrics import (
+    accuracy_score,
+    precision_score,
+    recall_score,
+    f1_score,
+    roc_auc_score,
+    confusion_matrix,
+    roc_curve, auc,
+)
 from scipy.stats import chi2_contingency
 
 
@@ -47,13 +54,23 @@ from scipy.stats import chi2_contingency
 # =============================================================================
 
 COLUMN_NAMES = [
-    'class', 'handicapped-infants', 'water-project-cost-sharing',
-    'adoption-of-the-budget-resolution', 'physician-fee-freeze',
-    'el-salvador-aid', 'religious-groups-in-schools',
-    'anti-satellite-test-ban', 'aid-to-nicaraguan-contras', 'mx-missile',
-    'immigration', 'synfuels-corporation-cutback', 'education-spending',
-    'superfund-right-to-sue', 'crime', 'duty-free-exports',
-    'export-administration-act-south-africa'
+    "class",
+    "handicapped-infants",
+    "water-project-cost-sharing",
+    "adoption-of-the-budget-resolution",
+    "physician-fee-freeze",
+    "el-salvador-aid",
+    "religious-groups-in-schools",
+    "anti-satellite-test-ban",
+    "aid-to-nicaraguan-contras",
+    "mx-missile",
+    "immigration",
+    "synfuels-corporation-cutback",
+    "education-spending",
+    "superfund-right-to-sue",
+    "crime",
+    "duty-free-exports",
+    "export-administration-act-south-africa",
 ]
 
 
@@ -61,13 +78,13 @@ COLUMN_NAMES = [
 # CZĘŚĆ 1: WCZYTANIE I EKSPLORACJA DANYCH
 # =============================================================================
 
+
 def load_data(filepath: str) -> pd.DataFrame:
     """
     Wczytuje dane i przypisuje nazwy kolumn z COLUMN_NAMES.
     (plik nie zawiera nagłówka)
     """
-    # TODO: Zaimplementuj
-    pass
+    return pd.read_csv(filepath, names=COLUMN_NAMES)
 
 
 def get_basic_info(df: pd.DataFrame) -> Dict[str, Any]:
@@ -78,8 +95,13 @@ def get_basic_info(df: pd.DataFrame) -> Dict[str, Any]:
     - 'missing_values': pd.Series          (liczba wartości NaN w każdej kolumnie)
     - 'missing_question_marks': pd.Series   (liczba '?' w każdej kolumnie)
     """
-    # TODO: Zaimplementuj
-    pass
+
+    return {
+        "shape": df.shape,
+        "dtypes": df.dtypes,
+        "missing_values": df.isna().sum(),
+        "missing_question_marks": df.apply(lambda x: (x == "?").sum()),
+    }
 
 
 def get_class_distribution(df: pd.DataFrame) -> Dict[str, Any]:
@@ -89,8 +111,21 @@ def get_class_distribution(df: pd.DataFrame) -> Dict[str, Any]:
     - 'percentages': pd.Series    (udział procentowy każdej klasy)
     - 'is_balanced': bool         (True, jeśli udział KAŻDEJ klasy mieści się w [40%, 60%])
     """
-    # TODO: Zaimplementuj
-    pass
+
+    counts = df.apply(lambda x: x.value_counts()).T.stack().dropna()
+    percentages = (
+        df.apply(lambda x: (x.value_counts(normalize=True) * 100))
+        .T.stack()
+        .dropna()
+        .round(decimals=2)
+    )
+    is_balanced = (percentages > 60).groupby(level=0).any()
+
+    return {
+        "counts": counts,
+        "percentages": percentages,
+        "is_balanced": is_balanced,
+    }
 
 
 def get_feature_info(df: pd.DataFrame, feature: str) -> Dict[str, Any]:
@@ -101,13 +136,18 @@ def get_feature_info(df: pd.DataFrame, feature: str) -> Dict[str, Any]:
     - 'value_counts': pd.Series
     - 'missing_count': int          (liczba '?' w danej kolumnie)
     """
-    # TODO: Zaimplementuj
-    pass
+    return {
+        "unique_values": df[feature].unique(),
+        "unique_count": len(df[feature].unique()),
+        "value_counts": df[feature].value_counts(),
+        "missing_count": (df[feature] == "?").sum(),
+    }
 
 
 # =============================================================================
 # CZĘŚĆ 2: ANALIZA EKSPLORACYJNA
 # =============================================================================
+
 
 def calculate_cramers_v(x: pd.Series, y: pd.Series) -> float:
     """
@@ -116,11 +156,18 @@ def calculate_cramers_v(x: pd.Series, y: pd.Series) -> float:
     Wskazówka: zbuduj tabelę krzyżową (pd.crosstab), policz statystykę chi2
     (chi2_contingency), a następnie V = sqrt( (chi2/n) / min(k-1, r-1) ).
     """
-    # TODO: Zaimplementuj
-    pass
+    cross_tab = pd.crosstab(y, x)
+    chi2 = chi2_contingency(cross_tab)[0]
+
+    n = cross_tab.sum().sum()
+    r, k = cross_tab.shape
+
+    return np.sqrt((chi2 / n) / min(k - 1, r - 1))
 
 
-def get_cramers_v_for_features(df: pd.DataFrame, features: List[str] = None) -> pd.DataFrame:
+def get_cramers_v_for_features(
+    df: pd.DataFrame, features: List[str] = None
+) -> pd.DataFrame:
     """
     Dla każdej cechy liczy V Craméra względem kolumny 'class'.
     Jeśli features=None, użyj wszystkich kolumn poza 'class'.
@@ -130,8 +177,21 @@ def get_cramers_v_for_features(df: pd.DataFrame, features: List[str] = None) -> 
     pd.DataFrame
         Kolumny ('feature', 'cramers_v'), posortowane malejąco po 'cramers_v'.
     """
-    # TODO: Zaimplementuj
-    pass
+    cramers_df = pd.DataFrame(columns=["feature", "cramers_v"])
+    y = df["class"]
+
+    if features is None:
+        df_no_labels = df.drop(labels=["class"], axis=1)
+        for idx, feature in enumerate(df_no_labels.columns):
+            cramers_df.loc[idx] = [
+                feature,
+                calculate_cramers_v(df_no_labels[feature], y=y),
+            ]
+    else:
+        for idx, feature in enumerate(features):
+            cramers_df.loc[idx] = [feature, calculate_cramers_v(df[feature], y=y)]
+
+    return cramers_df.sort_values(by="cramers_v", ascending=False)
 
 
 def get_feature_class_crosstab(df: pd.DataFrame, feature: str) -> pd.DataFrame:
@@ -139,15 +199,17 @@ def get_feature_class_crosstab(df: pd.DataFrame, feature: str) -> pd.DataFrame:
     Zwraca tabelę krzyżową cechy względem klasy, znormalizowaną po kolumnach
     (normalize='columns').
     """
-    # TODO: Zaimplementuj
-    pass
+    return pd.crosstab(df["class"], df[feature], normalize="columns")
 
 
 # =============================================================================
 # CZĘŚĆ 3: PRZYGOTOWANIE DANYCH
 # =============================================================================
 
-def handle_missing_values(df: pd.DataFrame, strategy: str = 'keep_as_category') -> pd.DataFrame:
+
+def handle_missing_values(
+    df: pd.DataFrame, strategy: str = "keep_as_category"
+) -> pd.DataFrame:
     """
     Obsługuje wartości '?' według wybranej strategii:
 
@@ -160,8 +222,34 @@ def handle_missing_values(df: pd.DataFrame, strategy: str = 'keep_as_category') 
     pd.DataFrame
         Dane po obsłudze braków (nie modyfikuj oryginalnego df).
     """
-    # TODO: Zaimplementuj
-    pass
+    strategies: list[str] = ["keep_as_category", "drop_rows", "impute_mode"]
+    if strategy not in strategies:
+        raise ValueError("Unknown strategy")
+
+    df_cp = df.copy()
+
+    match strategy:
+        case "drop_rows":
+            mask = (
+                df_cp.astype(str)
+                .apply(lambda col: col.str.contains("?", case=False, regex=False))
+                .any(axis=1)
+            )
+            return df_cp[~mask]
+        case "impute_mode":
+            # helper function to replace each '?' with the most frequent value from column
+            def replace_with_the_most_freq_val(col: pd.Series):
+                mode_val = col[col != "?"].mode()
+                if not mode_val.empty:
+                    return col.replace("?", mode_val.iloc[0])
+                else:
+                    return col
+
+            # Apply replace
+            return df_cp.apply(replace_with_the_most_freq_val)
+        case _:
+            # No changes, keep df as it is with default param 'keep_as_category'
+            return df_cp
 
 
 def prepare_features(df: pd.DataFrame) -> Tuple[pd.DataFrame, pd.Series]:
@@ -174,11 +262,23 @@ def prepare_features(df: pd.DataFrame) -> Tuple[pd.DataFrame, pd.Series]:
     Tuple[pd.DataFrame, pd.Series]
         (X, y)
     """
-    # TODO: Zaimplementuj
-    pass
+
+    def encode_political_parties(val: Literal["democrat", "republican"]):
+        match val:
+            case "democrat":
+                return 0
+            case "republican":
+                return 1
+            case _:
+                raise ValueError(f"Error: Unknow label {val}")
+
+    X = df.drop(labels=["class"])
+    y = df["class"].apply(encode_political_parties)
+
+    return X, y
 
 
-def encode_features(X: pd.DataFrame, method: str = 'onehot') -> np.ndarray:
+def encode_features(X: pd.DataFrame, method: str = "onehot") -> np.ndarray:
     """
     Koduje cechy kategoryczne.
 
@@ -190,8 +290,14 @@ def encode_features(X: pd.DataFrame, method: str = 'onehot') -> np.ndarray:
     np.ndarray
         Zakodowane cechy.
     """
-    # TODO: Zaimplementuj
-    pass
+    if method not in ["onehot", "ordinal"]:
+        raise ValueError("Unknown method passed to function")
+
+    match method:
+        case "ordinal":
+            return OrdinalEncoder().fit_transform(X)
+        case _:
+            return OneHotEncoder(drop="first", sparse_output=False).fit_transform(X)
 
 
 def get_feature_names_after_encoding(X: pd.DataFrame) -> List[str]:
@@ -200,13 +306,15 @@ def get_feature_names_after_encoding(X: pd.DataFrame) -> List[str]:
 
     Wskazówka: OneHotEncoder().fit(X).get_feature_names_out()
     """
-    # TODO: Zaimplementuj
-    pass
+    one_hot_encoder = OneHotEncoder(drop="first", sparse_output=False)
+    one_hot_encoder.fit(X)
+
+    return one_hot_encoder.get_feature_names_out()
 
 
-def split_data(X: np.ndarray, y: pd.Series,
-               test_size: float = 0.2,
-               random_state: int = 42) -> Tuple[np.ndarray, np.ndarray, pd.Series, pd.Series]:
+def split_data(
+    X: np.ndarray, y: pd.Series, test_size: float = 0.2, random_state: int = 42
+) -> Tuple[np.ndarray, np.ndarray, pd.Series, pd.Series]:
     """
     Dzieli dane na zbiór treningowy i testowy ZE STRATYFIKACJĄ (stratify=y).
 
@@ -215,13 +323,15 @@ def split_data(X: np.ndarray, y: pd.Series,
     Tuple[np.ndarray, np.ndarray, pd.Series, pd.Series]
         X_train, X_test, y_train, y_test
     """
-    # TODO: Zaimplementuj
-    pass
+    return train_test_split(
+        X, y, test_size=test_size, random_state=random_state, stratify=y
+    )
 
 
 # =============================================================================
 # CZĘŚĆ 4: BUDOWA MODELI
 # =============================================================================
+
 
 def get_models() -> Dict[str, Any]:
     """
@@ -236,22 +346,33 @@ def get_models() -> Dict[str, Any]:
 
     UWAGA: Hiperparametry celowo ograniczone, aby uwidocznić różnice między modelami.
     """
-    # TODO: Zaimplementuj
-    pass
+    return {
+        "LogisticRegression": LogisticRegression(max_iter=1000, random_state=42),
+        "DecisionTree": DecisionTreeClassifier(max_depth=4, random_state=42),
+        "RandomForest": RandomForestClassifier(
+            n_estimators=50, max_depth=5, random_state=42
+        ),
+        "GradientBoosting": GradientBoostingClassifier(
+            n_estimators=50, learning_rate=0.1, max_depth=2, random_state=42
+        ),
+        "NaiveBayes": CategoricalNB(),
+    }
 
 
 def train_model(model: Any, X_train: np.ndarray, y_train: pd.Series) -> Any:
     """Trenuje pojedynczy model i zwraca go."""
-    # TODO: Zaimplementuj
-    pass
+    model.fit(X_train, y_train)
+    return model
 
 
 # =============================================================================
 # CZĘŚĆ 5: OCENA MODELI
 # =============================================================================
 
-def calculate_metrics(y_true: pd.Series, y_pred: np.ndarray,
-                      y_prob: np.ndarray = None) -> Dict[str, float]:
+
+def calculate_metrics(
+    y_true: pd.Series, y_pred: np.ndarray, y_prob: np.ndarray = None
+) -> Dict[str, float]:
     """
     Oblicza metryki klasyfikacji.
 
@@ -261,13 +382,22 @@ def calculate_metrics(y_true: pd.Series, y_pred: np.ndarray,
         - 'accuracy', 'precision', 'recall', 'f1'
         - 'auc': float jeśli podano y_prob, w przeciwnym razie None
     """
-    # TODO: Zaimplementuj
-    pass
+    return {
+        "accuracy": accuracy_score(y_true, y_pred),
+        "precision": precision_score(y_true, y_pred, average="binary"),
+        "recall": recall_score(y_true, y_pred, average="binary"),
+        "f1": f1_score(y_true, y_pred, average="binary"),
+        "auc": roc_auc_score(y_true, y_prob) if y_prob is not None else None,
+    }
 
 
-def evaluate_all_models(models: Dict[str, Any],
-                        X_train: np.ndarray, X_test: np.ndarray,
-                        y_train: pd.Series, y_test: pd.Series) -> pd.DataFrame:
+def evaluate_all_models(
+    models: Dict[str, Any],
+    X_train: np.ndarray,
+    X_test: np.ndarray,
+    y_train: pd.Series,
+    y_test: pd.Series,
+) -> pd.DataFrame:
     """
     Trenuje i ocenia wszystkie modele.
 
@@ -276,20 +406,38 @@ def evaluate_all_models(models: Dict[str, Any],
     pd.DataFrame
         Kolumny: 'Model', 'Accuracy', 'Precision', 'Recall', 'F1', 'AUC'
     """
-    # TODO: Zaimplementuj
-    pass
+    df = pd.DataFrame(columns=["ć", "Accuracy", "Precision", "Recall", "F1", "AUC"])
+
+    for idx, (model_name, model) in enumerate(models.items()):
+        trained_model = train_model(model, X_train, y_train)
+
+        y_test_pred = trained_model.predict(X_test)
+
+        # TODO check it
+        y_test_prob = trained_model.predict_proba(X_test)[:, 1]
+
+        metrics = calculate_metrics(y_test, y_test_pred, y_test_prob)
+
+        df.loc[idx] = [
+            model_name,
+            metrics["accuracy"],
+            metrics["precision"],
+            metrics["recall"],
+            metrics["f1"],
+            metrics["auc"],
+        ]
+
+    return df
 
 
-def get_best_model_name(results_df: pd.DataFrame, metric: str = 'F1') -> str:
+def get_best_model_name(results_df: pd.DataFrame, metric: str = "F1") -> str:
     """Zwraca nazwę najlepszego modelu według wskazanej metryki (wartość najwyższa)."""
-    # TODO: Zaimplementuj
-    pass
+    return results_df.at[results_df[metric].idxmax(), 'Model']
 
 
 def get_confusion_matrix(y_true: pd.Series, y_pred: np.ndarray) -> np.ndarray:
     """Zwraca macierz pomyłek 2x2."""
-    # TODO: Zaimplementuj
-    pass
+    return confusion_matrix(y_true=y_true, y_pred=y_pred)
 
 
 def get_roc_curve_data(y_true: pd.Series, y_prob: np.ndarray) -> Dict[str, Any]:
@@ -304,16 +452,24 @@ def get_roc_curve_data(y_true: pd.Series, y_prob: np.ndarray) -> Dict[str, Any]:
         - 'thresholds': np.ndarray
         - 'auc': float
     """
-    # TODO: Zaimplementuj
-    pass
+
+    fpr, tpr, thresholds = roc_curve(y_true, y_prob)
+    return {
+        "fpr": fpr,
+        "tpr": tpr,
+        "thresholds": thresholds,
+        "auc": auc(fpr, tpr)
+    }
 
 
 # =============================================================================
 # CZĘŚĆ 6: INTERPRETACJA MODELU
 # =============================================================================
 
-def get_feature_importance(model: RandomForestClassifier,
-                           feature_names: List[str]) -> pd.DataFrame:
+
+def get_feature_importance(
+    model: RandomForestClassifier, feature_names: List[str]
+) -> pd.DataFrame:
     """
     Zwraca ważność cech modelu RandomForest.
 
@@ -353,6 +509,7 @@ def analyze_misclassification_risk(cm: np.ndarray) -> Dict[str, Any]:
 # =============================================================================
 # CZĘŚĆ 7: WIZUALIZACJE
 # =============================================================================
+
 
 def plot_class_distribution(df: pd.DataFrame) -> plt.Figure:
     """Wykres słupkowy rozkładu klas."""
@@ -394,8 +551,10 @@ def plot_feature_importance(importance_df: pd.DataFrame, top_n: int = 15) -> plt
 # GENEROWANIE WYKRESÓW
 # =============================================================================
 
-def generate_all_figures(df: pd.DataFrame, results: Dict[str, Any],
-                         output_dir: str = "figures") -> Dict[str, str]:
+
+def generate_all_figures(
+    df: pd.DataFrame, results: Dict[str, Any], output_dir: str = "figures"
+) -> Dict[str, str]:
     """
     Generuje i zapisuje wszystkie wykresy do wskazanego folderu.
 
@@ -412,8 +571,10 @@ def generate_all_figures(df: pd.DataFrame, results: Dict[str, Any],
 # FUNKCJA GŁÓWNA
 # =============================================================================
 
-def run_full_analysis(filepath: str, generate_figures: bool = True,
-                      figures_dir: str = "figures") -> Dict[str, Any]:
+
+def run_full_analysis(
+    filepath: str, generate_figures: bool = True, figures_dir: str = "figures"
+) -> Dict[str, Any]:
     """
     Uruchamia pełną analizę i zwraca słownik ze wszystkimi wynikami.
 
@@ -462,7 +623,22 @@ def run_full_analysis(filepath: str, generate_figures: bool = True,
 # =============================================================================
 
 if __name__ == "__main__":
+
     # Przykład użycia:
     # results = run_full_analysis("house-votes-84.data")
     # print(results['results_df'])
-    pass
+    df = load_data("house-votes-84.data")
+
+    basic_df_info = get_basic_info(df)
+    distribution = get_class_distribution(df)
+    features_info = get_feature_info(df, feature="crime")
+
+    with pd.option_context(
+        "display.max_rows",
+        None,
+        "display.max_columns",
+        None,
+        "display.max_colwidth",
+        None,
+    ):
+        pass
