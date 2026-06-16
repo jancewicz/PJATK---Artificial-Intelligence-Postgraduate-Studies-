@@ -272,7 +272,7 @@ def prepare_features(df: pd.DataFrame) -> Tuple[pd.DataFrame, pd.Series]:
             case _:
                 raise ValueError(f"Error: Unknow label {val}")
 
-    X = df.drop(labels=["class"])
+    X = df.drop(labels=["class"], axis=1)
     y = df["class"].apply(encode_political_parties)
 
     return X, y
@@ -406,7 +406,7 @@ def evaluate_all_models(
     pd.DataFrame
         Kolumny: 'Model', 'Accuracy', 'Precision', 'Recall', 'F1', 'AUC'
     """
-    df = pd.DataFrame(columns=["ć", "Accuracy", "Precision", "Recall", "F1", "AUC"])
+    df = pd.DataFrame(columns=["Model", "Accuracy", "Precision", "Recall", "F1", "AUC"])
 
     for idx, (model_name, model) in enumerate(models.items()):
         trained_model = train_model(model, X_train, y_train)
@@ -478,14 +478,21 @@ def get_feature_importance(
     pd.DataFrame
         Kolumny ('feature', 'importance'), posortowane malejąco.
     """
-    # TODO: Zaimplementuj
-    pass
+    importance_df: pd.DataFrame = pd.DataFrame(columns=["feature", "importance"])
+    importances = model.feature_importances_
+
+    for idx, (importance, feature_name) in enumerate(list(zip(importances, feature_names))):
+        importance_df.loc[idx] = [
+            feature_name,
+            importance
+        ]
+
+    return importance_df.sort_values(by="importance", ascending=False)
 
 
 def get_top_features(importance_df: pd.DataFrame, n: int = 5) -> List[str]:
     """Zwraca listę n najważniejszych cech."""
-    # TODO: Zaimplementuj
-    pass
+    return importance_df["feature"].iloc[:n].tolist()
 
 
 def analyze_misclassification_risk(cm: np.ndarray) -> Dict[str, Any]:
@@ -502,8 +509,17 @@ def analyze_misclassification_risk(cm: np.ndarray) -> Dict[str, Any]:
         - 'fp_rate': float          (FP / (FP + TN))
         - 'error_assessment': str   (krótki, neutralny opis przewagi błędów FN/FP)
     """
-    # TODO: Zaimplementuj
-    pass
+    tn, fp, fn, tp = cm[0, 0], cm[0, 1], cm[1, 0], cm[1, 1]
+    fn_rate = fn / (fn + tp)
+    fp_rate = fp / (fp + tn)
+
+    return {
+        "false_positives": fp,
+        "false_negatives": fn,
+        "fn_rate": fn_rate,
+        "fp_rate": fp_rate,
+        "error_assessment": "Higher FN rate" if fn_rate > fp_rate else "Higher FP rate",
+    }
 
 
 # =============================================================================
@@ -513,38 +529,50 @@ def analyze_misclassification_risk(cm: np.ndarray) -> Dict[str, Any]:
 
 def plot_class_distribution(df: pd.DataFrame) -> plt.Figure:
     """Wykres słupkowy rozkładu klas."""
-    # TODO: Zaimplementuj
-    pass
+    fig, ax = plt.subplots()
+    sns.countplot(df["class"], ax=ax)
+    return fig
 
 
 def plot_feature_vs_class(df: pd.DataFrame, feature: str) -> plt.Figure:
     """Wykres słupkowy wartości cechy w podziale na klasy."""
-    # TODO: Zaimplementuj
-    pass
+    fig, ax = plt.subplots()
+    sns.countplot(x=feature, hue='class', data=df, palette="hls", ax=ax)
+    return fig
 
 
 def plot_cramers_v_ranking(cramers_df: pd.DataFrame, top_n: int = 10) -> plt.Figure:
     """Poziomy wykres słupkowy rankingu Cramér's V."""
-    # TODO: Zaimplementuj
-    pass
 
+    top_n_cramers_df = cramers_df.iloc[:top_n]
+    fig, ax = plt.subplots()
+    sns.barplot(x=top_n_cramers_df["cramers_v"], y=top_n_cramers_df["feature"], ax=ax)
+    return fig
 
 def plot_confusion_matrix(cm: np.ndarray, labels: List[str] = None) -> plt.Figure:
     """Heatmapa macierzy pomyłek."""
-    # TODO: Zaimplementuj
-    pass
-
+    fig, ax = plt.subplots()
+    sns.heatmap(data=cm, ax=ax, annot=True, xticklabels=labels, yticklabels=labels)
+    return fig
 
 def plot_roc_curve(roc_data: Dict[str, Any]) -> plt.Figure:
     """Wykres krzywej ROC z przekątną odniesienia i wartością AUC."""
-    # TODO: Zaimplementuj
-    pass
+    fpr, tpr, threshold, auc_val = roc_data.values()
+
+    fig, ax = plt.subplots()
+    ax.plot(fpr, tpr, label=f"AUC = {auc_val:.2f}")
+    ax.plot([0, 1], [0, 1], linestyle='--')
+    ax.legend()
+    return fig
 
 
 def plot_feature_importance(importance_df: pd.DataFrame, top_n: int = 15) -> plt.Figure:
     """Poziomy wykres słupkowy ważności cech."""
-    # TODO: Zaimplementuj
-    pass
+    top_n_importance_df = importance_df.iloc[:top_n]
+
+    fig, ax = plt.subplots()
+    sns.barplot(x=top_n_importance_df["importance"], y=top_n_importance_df["feature"], ax=ax)
+    return
 
 
 # =============================================================================
@@ -563,9 +591,13 @@ def generate_all_figures(
     Dict[str, str]
         Słownik {nazwa_wykresu: ścieżka_do_pliku}
     """
-    # TODO: Zaimplementuj
+    # plot_class_distribution
+    # plot_feature_vs_class
+    # plot_cramers_v_ranking
+    # plot_confusion_matrix
+    # plot_roc_curve
+    # plot_feature_importance
     pass
-
 
 # =============================================================================
 # FUNKCJA GŁÓWNA
@@ -614,8 +646,63 @@ def run_full_analysis(
     15. get_feature_importance(), get_top_features(), analyze_misclassification_risk()
     16. generate_all_figures() [opcjonalnie]
     """
-    # TODO: Zaimplementuj łącząc wszystkie powyższe funkcje
-    pass
+    df = load_data(filepath)
+
+    info = get_basic_info(df)
+    cls_distribution = get_class_distribution(df)
+    cramers_v = get_cramers_v_for_features(df)
+
+    df = handle_missing_values(df, strategy="keep_as_category")
+    X, y = prepare_features(df)
+
+    features_names = get_feature_names_after_encoding(X)
+    X_enc = encode_features(X)
+
+    X_train, X_test, y_train, y_test = split_data(X_enc, y, test_size=0.2, random_state=42)
+
+    models = get_models()
+
+    results_df = evaluate_all_models(models, X_train, X_test, y_train, y_test)
+    best_model_name: str = get_best_model_name(results_df)
+
+    best_model = get_models()[best_model_name]
+    best_model.fit(X_train, y_train)
+
+    rf: RandomForestClassifier = RandomForestClassifier(n_estimators=50, max_depth=5, random_state=42)
+    rf.fit(X_train, y_train)
+
+    best_model_y_test_pred = best_model.predict(X_test)
+    best_model_y_test_prob = best_model.predict_proba(X_test)[:, 1]
+
+    # TODO check if this variable is needed
+    rf_y_test_prob = rf.predict_proba(X_test)[:, 1]
+
+    cm_best_model = get_confusion_matrix(y_test, best_model_y_test_pred)
+    roc_curve_data = get_roc_curve_data(y_test, best_model_y_test_prob)
+
+    importance = get_feature_importance(rf, features_names)
+    top_features = get_top_features(importance)
+    misclassification_risk = analyze_misclassification_risk(cm_best_model)
+
+    # TODO fill the dict
+    return {
+        "basic_info": info,
+        "class_distribution": cls_distribution,
+        "cramers_v": cramers_v,
+        "results_df": results_df,
+        "best_model_name": best_model_name,
+        "best_model": best_model,
+        "confusion_matrix": cm_best_model,
+        "roc_data": roc_curve_data,
+        "feature_importance": importance,
+        "top_features": top_features,
+        "misclassification_risk": misclassification_risk,
+        "y_test": y_test,
+        "y_pred": best_model_y_test_pred,
+        "y_prob": best_model_y_test_prob,
+        # TODO add this
+        "saved_figures": "",
+    }
 
 
 # =============================================================================
@@ -625,20 +712,20 @@ def run_full_analysis(
 if __name__ == "__main__":
 
     # Przykład użycia:
-    # results = run_full_analysis("house-votes-84.data")
-    # print(results['results_df'])
-    df = load_data("house-votes-84.data")
-
-    basic_df_info = get_basic_info(df)
-    distribution = get_class_distribution(df)
-    features_info = get_feature_info(df, feature="crime")
-
-    with pd.option_context(
-        "display.max_rows",
-        None,
-        "display.max_columns",
-        None,
-        "display.max_colwidth",
-        None,
-    ):
-        pass
+    results = run_full_analysis("house-votes-84.data")
+    print(results['results_df'])
+    # df = load_data("house-votes-84.data")
+    #
+    # basic_df_info = get_basic_info(df)
+    # distribution = get_class_distribution(df)
+    # features_info = get_feature_info(df, feature="crime")
+    #
+    # with pd.option_context(
+    #     "display.max_rows",
+    #     None,
+    #     "display.max_columns",
+    #     None,
+    #     "display.max_colwidth",
+    #     None,
+    # ):
+    #     pass
