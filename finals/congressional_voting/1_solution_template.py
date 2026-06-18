@@ -44,7 +44,8 @@ from sklearn.metrics import (
     f1_score,
     roc_auc_score,
     confusion_matrix,
-    roc_curve, auc,
+    roc_curve,
+    auc,
 )
 from scipy.stats import chi2_contingency
 
@@ -432,7 +433,7 @@ def evaluate_all_models(
 
 def get_best_model_name(results_df: pd.DataFrame, metric: str = "F1") -> str:
     """Zwraca nazwę najlepszego modelu według wskazanej metryki (wartość najwyższa)."""
-    return results_df.at[results_df[metric].idxmax(), 'Model']
+    return results_df.at[results_df[metric].idxmax(), "Model"]
 
 
 def get_confusion_matrix(y_true: pd.Series, y_pred: np.ndarray) -> np.ndarray:
@@ -454,12 +455,7 @@ def get_roc_curve_data(y_true: pd.Series, y_prob: np.ndarray) -> Dict[str, Any]:
     """
 
     fpr, tpr, thresholds = roc_curve(y_true, y_prob)
-    return {
-        "fpr": fpr,
-        "tpr": tpr,
-        "thresholds": thresholds,
-        "auc": auc(fpr, tpr)
-    }
+    return {"fpr": fpr, "tpr": tpr, "thresholds": thresholds, "auc": auc(fpr, tpr)}
 
 
 # =============================================================================
@@ -481,11 +477,10 @@ def get_feature_importance(
     importance_df: pd.DataFrame = pd.DataFrame(columns=["feature", "importance"])
     importances = model.feature_importances_
 
-    for idx, (importance, feature_name) in enumerate(list(zip(importances, feature_names))):
-        importance_df.loc[idx] = [
-            feature_name,
-            importance
-        ]
+    for idx, (importance, feature_name) in enumerate(
+        list(zip(importances, feature_names))
+    ):
+        importance_df.loc[idx] = [feature_name, importance]
 
     return importance_df.sort_values(by="importance", ascending=False)
 
@@ -537,7 +532,7 @@ def plot_class_distribution(df: pd.DataFrame) -> plt.Figure:
 def plot_feature_vs_class(df: pd.DataFrame, feature: str) -> plt.Figure:
     """Wykres słupkowy wartości cechy w podziale na klasy."""
     fig, ax = plt.subplots()
-    sns.countplot(x=feature, hue='class', data=df, palette="hls", ax=ax)
+    sns.countplot(x=feature, hue="class", data=df, palette="hls", ax=ax)
     return fig
 
 
@@ -549,11 +544,13 @@ def plot_cramers_v_ranking(cramers_df: pd.DataFrame, top_n: int = 10) -> plt.Fig
     sns.barplot(x=top_n_cramers_df["cramers_v"], y=top_n_cramers_df["feature"], ax=ax)
     return fig
 
+
 def plot_confusion_matrix(cm: np.ndarray, labels: List[str] = None) -> plt.Figure:
     """Heatmapa macierzy pomyłek."""
     fig, ax = plt.subplots()
     sns.heatmap(data=cm, ax=ax, annot=True, xticklabels=labels, yticklabels=labels)
     return fig
+
 
 def plot_roc_curve(roc_data: Dict[str, Any]) -> plt.Figure:
     """Wykres krzywej ROC z przekątną odniesienia i wartością AUC."""
@@ -561,7 +558,7 @@ def plot_roc_curve(roc_data: Dict[str, Any]) -> plt.Figure:
 
     fig, ax = plt.subplots()
     ax.plot(fpr, tpr, label=f"AUC = {auc_val:.2f}")
-    ax.plot([0, 1], [0, 1], linestyle='--')
+    ax.plot([0, 1], [0, 1], linestyle="--")
     ax.legend()
     return fig
 
@@ -571,7 +568,9 @@ def plot_feature_importance(importance_df: pd.DataFrame, top_n: int = 15) -> plt
     top_n_importance_df = importance_df.iloc[:top_n]
 
     fig, ax = plt.subplots()
-    sns.barplot(x=top_n_importance_df["importance"], y=top_n_importance_df["feature"], ax=ax)
+    sns.barplot(
+        x=top_n_importance_df["importance"], y=top_n_importance_df["feature"], ax=ax
+    )
     return
 
 
@@ -598,6 +597,7 @@ def generate_all_figures(
     # plot_roc_curve
     # plot_feature_importance
     pass
+
 
 # =============================================================================
 # FUNKCJA GŁÓWNA
@@ -658,7 +658,9 @@ def run_full_analysis(
     features_names = get_feature_names_after_encoding(X)
     X_enc = encode_features(X)
 
-    X_train, X_test, y_train, y_test = split_data(X_enc, y, test_size=0.2, random_state=42)
+    X_train, X_test, y_train, y_test = split_data(
+        X_enc, y, test_size=0.2, random_state=42
+    )
 
     models = get_models()
 
@@ -668,7 +670,9 @@ def run_full_analysis(
     best_model = get_models()[best_model_name]
     best_model.fit(X_train, y_train)
 
-    rf: RandomForestClassifier = RandomForestClassifier(n_estimators=50, max_depth=5, random_state=42)
+    rf: RandomForestClassifier = RandomForestClassifier(
+        n_estimators=50, max_depth=5, random_state=42
+    )
     rf.fit(X_train, y_train)
 
     best_model_y_test_pred = best_model.predict(X_test)
@@ -710,22 +714,5 @@ def run_full_analysis(
 # =============================================================================
 
 if __name__ == "__main__":
-
-    # Przykład użycia:
     results = run_full_analysis("house-votes-84.data")
-    print(results['results_df'])
-    # df = load_data("house-votes-84.data")
-    #
-    # basic_df_info = get_basic_info(df)
-    # distribution = get_class_distribution(df)
-    # features_info = get_feature_info(df, feature="crime")
-    #
-    # with pd.option_context(
-    #     "display.max_rows",
-    #     None,
-    #     "display.max_columns",
-    #     None,
-    #     "display.max_colwidth",
-    #     None,
-    # ):
-    #     pass
+    print(results["results_df"])
